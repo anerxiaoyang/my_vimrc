@@ -203,8 +203,7 @@ map <C-l> <C-W>l
 "map <leader>t<leader> :tabnext 
 
 "在本行与上行/下行之间，在insert mode插入一个空行，且具有相应行缩进
-inoremap <c-shift-o> <Esc>k$o
-inoremap <c-o> <Esc>$o
+inoremap <c-o> <Esc>k$o
 
 "在insert mode自定义begin end
 inoremap <c-b> begin<cr>end<Esc>k$o
@@ -302,6 +301,9 @@ endfunc
 "    \   exe "normal! g`\"" |
 "    \ endif
 " 定位到退出位置并移动到屏幕中央(gyf)
+" It runs perfect on my nvim
+" But meet bugs that I don't understand on lexin'vim
+" Forgive me, I am just a vim fool
 augroup return_exit_positon
   autocmd!
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g'\"" | endif | normal! zvzz
