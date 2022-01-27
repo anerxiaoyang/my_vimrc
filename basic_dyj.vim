@@ -20,7 +20,8 @@ set tabstop=4
 set shiftwidth=4
 set cmdheight=1
 set expandtab
-set gfn=FiraCode\ NF:h15
+"set gfn=FiraCode\ NF:h15
+set gfn=Courier\ 10\ Pitch\ 14
 set tags+=.../tags
 set autochdir
 colorschem desert
@@ -91,6 +92,8 @@ syntax on
 
 "搜索时匹配字符高亮
 set hlsearch
+"after show search match, turn off this match highlight
+map <silent> <leader><cr> :noh<cr>
 
 "
 filetype plugin indent on
@@ -104,19 +107,19 @@ filetype indent on
 set completeopt=preview,menu,menuone,noselect,longest
 
 "给一个词语加上(),{},[],"",''，<>  缺点是使用的时候需要在normal mode，且把光标放在单词词首（b是移动光标到单词词首）
-nnoremap ( i(<Esc>ea)<Esc>
-nnoremap { i{<Esc>ea}<Esc>
-nnoremap [ i[<Esc>ea]<Esc>
-nnoremap " i"<Esc>ea"<Esc>
-nnoremap ' i'<Esc>ea'<Esc>
-"nnoremap < i<<Esc>ea><Esc>
+nnoremap ( bi(<Esc>ea)<Esc>
+nnoremap { bi{<Esc>ea}<Esc>
+nnoremap [ bi[<Esc>ea]<Esc>
+nnoremap " bi"<Esc>ea"<Esc>
+nnoremap ' bi'<Esc>ea'<Esc>
+"nnoremap < bi<<Esc>ea><Esc>
 
 "在insert mode自动打出成对的(),{},[],"",'',<>
 inoremap ( ()<Esc>i
 inoremap { {}<Esc>i
 inoremap [ []<Esc>i
 inoremap " ""<Esc>i
-inoremap ' ''<Esc>i
+"inoremap ' ''<Esc>i
 "inoremap < <><Esc>i
 
 
@@ -185,9 +188,6 @@ set whichwrap+=<,>,h,l
 
 " For regular expressions turn magic on
 set magic
-
-" Disable highlight when <leader><cr> is pressed
-map <silent> <leader><cr> :noh<cr>
 
 " Smart way to move between windows
 map <C-j> <C-W>j
@@ -323,5 +323,21 @@ augroup q_for_quit_on_helpfile_group
     autocmd!
     autocmd FileType help nnoremap <silent> <buffer> q :bwipeout<cr>
 augroup END
+
+"set for ctags
+map <silent> <leader>w <c-w>}
+
+"match the key words that I defined
+"exclude this vimrc settings, you should do these steps:
+"1: cd ~/.vim
+"2: cd plugin
+"3: cp $VIMRUNTIME/macros/matchit.vim ~/.vim/plugin
+"4: if step 3 wrong, display Undefined VINRUNTIME, you can open vim, and put this: echo $VIMRUNTIME
+let b:match_word='\<begin\>:\<end\>,'
+    \ . '\<`ifdef\>:\<`elsif\>:\<`else\>:\<`endif\>,'
+    \ . '\<if>:\<else if\>:\<else\>,'
+    \ . '\<module\>:\<endmodule\>'
+let b:matchit_ignorecase=1  "hue nue da xiao xie
+" now you can use % to tiao lai tiao qu
             
 
