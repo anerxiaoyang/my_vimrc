@@ -128,7 +128,8 @@ inoremap " ""<Esc>i
 set scrolloff=5
 
 "将数字0-9、可打印希腊文（还是阿拉丁文？）、下划线、连接符视为单词字符
-set iskeyword=@,48-57,192-255,_,-,$,@,%,#
+"set iskeyword=@,48-57,192-255,_,-,$,@,%,#
+set iskeyword=@,48-57,192-255,_,-,@,%,#
 
 " Move a line of text using ALT+[jk] or Command+[jk] on mac
 nmap <M-j> mz:m+<cr>`z
