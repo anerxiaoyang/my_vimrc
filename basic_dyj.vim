@@ -341,4 +341,5 @@ let b:match_word='\<begin\>:\<end\>,'
 let b:matchit_ignorecase=1  "hue nue da xiao xie
 " now you can use % to tiao lai tiao qu
             
-
+"启用下侧滚动条
+set go+=b
