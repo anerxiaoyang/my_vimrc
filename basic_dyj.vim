@@ -191,10 +191,14 @@ set whichwrap+=<,>,h,l
 set magic
 
 " Smart way to move between windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+"map <C-j> <C-W>j
+"map <C-k> <C-W>k
+"map <C-h> <C-W>h
+"map <C-l> <C-W>l
+map <C-Down> <C-W>j
+map <C-Up> <C-W>k
+map <C-Left> <C-W>h
+map <C-Right> <C-W>l
 
 " Useful mappings for managing tabs
 "map <leader>tn :tabnew<cr>
@@ -350,3 +354,9 @@ set wildmode=longest,list
 "2
 "set wildmenu
 "set wildmode=full
+
+"一个gvim中不同缓冲区之间的切换
+nnoremap <silent> <leader>n :bnest<CR>
+nnoremap <silent> <leader>p :bprevious<CR>
+nnoremap <silent> <leader>f :bfirst<CR>
+nnoremap <silent> <leader>l :blast<CR>
