@@ -343,3 +343,10 @@ let b:matchit_ignorecase=1  "hue nue da xiao xie
             
 "启用下侧滚动条
 set go+=b
+
+"设置命令模式下命令的自动补全行为，1：bash shell行为，2：zsh行为
+"1
+set wildmode=longest,list
+"2
+"set wildmenu
+"set wildmode=full
