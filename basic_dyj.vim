@@ -360,3 +360,15 @@ nnoremap <silent> <leader>n :bnest<CR>
 nnoremap <silent> <leader>p :bprevious<CR>
 nnoremap <silent> <leader>f :bfirst<CR>
 nnoremap <silent> <leader>l :blast<CR>
+
+"缺省情况下，普通模式/可视模式下，*会对光标下的单词进行搜索
+"现进行重定义，可视模式下，*会正向搜索当前选择区文本，#会反向搜索当前选择区文本
+"来自vim实用技巧87
+xnoremap * :<C-u>call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
+xnoremap * :<C-u>call <SID>VSetSearch('?')<CR>/<C-R>=@/<CR><CR>
+function! s:VSetSearch(cmdtype)
+  let temp = @s
+  norm! gv"sy
+  let @/ = '\V' . substitute(escape(@s, a:cmdtype.'\'), '\n', '\\n', 'g')
+  let @s = temp
+endfunction
