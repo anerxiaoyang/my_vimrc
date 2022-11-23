@@ -122,6 +122,12 @@ inoremap " ""<Esc>i
 "inoremap ' ''<Esc>i
 "inoremap < <><Esc>i
 
+"在insert mode自动打出只想打出单个的(,{,[,"
+inoremap <M-(> (
+inoremap <M-{> {
+inoremap <M-[> [
+inoremap <M-"> "
+
 
 
 "翻页的时候顶部或底部保留5行内容
@@ -372,3 +378,14 @@ function! s:VSetSearch(cmdtype)
   let @/ = '\V' . substitute(escape(@s, a:cmdtype.'\'), '\n', '\\n', 'g')
   let @s = temp
 endfunction
+
+"in visual or normal mode, mask or unmask chosed line(s)
+normap <silent> <leader>/ I//<Esc>
+normap <silent> <leader><leader>/ 0f/xx
+xnormap <silent> <leader>/ :\/<CR>
+xnormap <silent> <leader><leader>/ :\\/<CR>
+
+normap <silent> <leader># I#<Esc>
+normap <silent> <leader><leader># 0f#x
+xnormap <silent> <leader># :\#<CR>
+xnormap <silent> <leader><leader># :\\#<CR>
