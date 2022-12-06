@@ -217,10 +217,10 @@ map <C-Right> <C-W>l
 inoremap <c-o> <Esc>k$o
 
 "在insert mode自定义begin end
-inoremap <c-b> begin<cr>end<Esc>k$o
+"inoremap <c-b> begin<cr>end<Esc>k$o
 
 "在insert mode下自定义一个always模块
-inoremap <c-a> always @(posedge clk or negedge rst_n) begin<cr>end<Esc>k$oif (!rst_n) begin<cr>end<cr>else begin<cr>end<Esc>3k$o
+"inoremap <c-a> always @(posedge clk or negedge rst_n) begin<cr>end<Esc>k$oif (!rst_n) begin<cr>end<cr>else begin<cr>end<Esc>3k$o
 
 
 
@@ -389,3 +389,5 @@ normap <silent> <leader># I#<Esc>
 normap <silent> <leader><leader># 0f#x
 xnormap <silent> <leader># :\#<CR>
 xnormap <silent> <leader><leader># :\\#<CR>
+
+map <F1> :keepjumps normal! *N<CR>
