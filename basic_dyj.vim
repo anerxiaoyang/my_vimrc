@@ -267,16 +267,16 @@ exec "!g++ % -o %<"
 exec "! ./%<"
 endfunc
 
-map fff :call SetLeftWindow()<CR>
+map ff :call SetLeftWindow()<CR>
 func! SetLeftWindow()
     winpos 10 0
-    set lines=40 columns=170
+    set lines=50 columns=210
 endfunc
 
-map ffg :call SetRightWindow()<CR>
+map fg :call SetRightWindow()<CR>
 func! SetRightWindow()
     winpos 2565 0
-    set lines=40 columns=170
+    set lines=50 columns=210
 endfunc
 
 " 能够漂亮地显示.NFO文件
