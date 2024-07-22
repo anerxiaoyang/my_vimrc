@@ -51,13 +51,31 @@ syntax on
 highlight StatusLine guifg=SlateBlue guibg=Yellow
 highlight StatusLineNC guifg=Gray guibg=White
 
+"共享剪贴板  
+set clipboard+=unnamed
+
+"在右下角显示normal mode下的正在输入的命令
+set showcmd
+
+"显示中文帮助
+if version >= 603
+    set helplang=cn
+    set langmenu=zh_CN.UTF-8
+    set encoding=utf-8
+endif
+
+" For regular expressions turn magic on
+set magic
+
 """""""""""""""""""""""""""""""""""""""""
 " plugin
 """""""""""""""""""""""""""""""""""""""""
-" 使用Vunble管理vim插件, Vunble需要安装
+" 使用Vunble管理vim插件, Vundle需要安装
 " https://zhuanlan.zhihu.com/p/34478059/
 " https://blog.csdn.net/lyshark_lyshark/article/details/125846990
 " https://blog.csdn.net/qq_42570601/article/details/120368712
+" https://blog.csdn.net/u013496080/article/details/85649242
+" https://blog.csdn.net/zzyczzyc/article/details/83244516
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 " nerdtree就是需要管理的插件，其它插件类似，nerdtree也需要安装？
@@ -107,8 +125,8 @@ set linespace=0
 set ruler
 set rulerformat=%20(%2*%<%f%=\ %m%r\ %31\ %c\ %p%%%)
 
-" 命令行（在状态行下）的高度，默认为1，这里设置为2
-set cmdheight=2
+" 命令行（在状态行下）的高度，默认为1
+set cmdheight=1
 
 " 使回格键（backspase）正常处理indent，eol，start等
 set backspace=2
@@ -129,6 +147,15 @@ set report=0
 
 " 在被分割的窗口显示空白，便于阅读
 set fillchars=vert:\ ,stl:\ ,stlnc:\ 
+
+" 可以让vim 根据编辑的文件自动切换工作目录
+set autochdir
+
+" 设置当文件被改动时自动载入
+set autoread
+
+"在visual mode下选择内容能按  p  将选择的内容替换为缓冲区的内容
+vnoremap p <Esc>:let current_reg = @"<CR>gvs<C-R>=current_reg<CR><Esc>
 
 """""""""""""""""""""""""""""""""""""""""
 " 搜索和匹配
@@ -159,6 +186,9 @@ set statusline=%F%m%r%h%w\[POS=%l,%v][%p%%]\%{strftime(\"%d%m%y\ -\ %H:%M\")}
 
 " 启动显示状态行（1），总是显示状态行（2）
 set laststatus=2
+
+" 禁止在搜索到达文件两端时，又从另一端开始
+set nowrapscan
 
 """""""""""""""""""""""""""""""""""""""""
 " 文本格式和排版
@@ -201,6 +231,8 @@ let Tlist_File_Fold_Auto_Close = 0
 
 " 不要显示折叠树
 let Tlist_Enable_Fold_Column = 0
+
+set tags+=.../tags
 
 """""""""""""""""""""""""""""""""""""""""
 " Autocommands
@@ -251,184 +283,73 @@ endfunc
 set encoding=utf-8
 set fileencodings=ucs-bom,utf-8,gbk,cp936,gb2312,big5,euc-jp,euc-kr,latin1
 
+function! SetFileEncodings(encodings)
+let b:myfileencodingsbak=&fileencodings
+let &fileencodings=a:encodings
+endfunction
+function! RestoreFileEncodings()
+let &fileencodings=b:myfileencodingsbak
+unlet b:myfileencodingsbak
+endfunction
 
+au BufReadPre *.nfo call SetFileEncodings('cp437')|set ambiwidth=single au BufReadPost *.nfo call RestoreFileEncodings()
 
+" 高亮显示普通txt文件（需要txt.vim）-> 但是没有找到这个txt.vim文件
+au BufRead,BufNewFile * setfiletype txt
 
+" 用空格键来开关折叠
+set foldenable
+"手动折叠
+set foldmethod=marker
+nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc':'zo')<CR>
 
+" minibufexpl插件的一般设置   -> 我认为minibufexpl是Vundle自安装的一个插件
+let g:miniBufExplMapWindowNavVim = 1
+let g:miniBufExplMapWindowNavArrows = 1
+let g:miniBufExplMapCTabSwitchBufs = 1
+let g:miniBufExplModSelTarget = 1
 
-set nowrapscan
+" 不让vim发出讨厌的滴滴声
+" 不要闪烁
+set novisualbell
+set vb t_vb=
+au GuiEnter * set t_vb=
 
-
-"set gfn=FiraCode\ NF:h15
-set gfn=Courier\ 10\ Pitch\ 14
-set tags+=.../tags
-set autochdir
-colorschem desert
-
-
-
-
-"""""""""""""""""""""""""""""""""""""""""
-"""""""""使用设置"""""""""""""""""""""""""
-"""""""""""""""""""""""""""""""""""""""""
-
-
-
-
-
-
-
-
-
-
-" 设置当文件被改动时自动载入
-set autoread
-
-"共享剪贴板  
-set clipboard+=unnamed
-
-
-
-"
-
-
-
-
-
-
-
-
-
-
-"在右下角显示normal mode下的正在输入的命令
-set showcmd
-
-"在visual mode下选择内容能按  p  将选择的内容替换为缓冲区的内容
-vnoremap p <Esc>:let current_reg = @"<CR>gvs<C-R>=current_reg<CR><Esc>
-
-
-
-
-"after show search match, turn off this match highlight
-map <silent> <leader><cr> :noh<cr>
-
-
+"设置命令模式下命令的自动补全行为，1：bash shell行为，2：zsh行为
+"1
+set wildmode=longest,list
+"2
+"set wildmenu
+"set wildmode=full
 
 "补全选项，建议一定将noselect选项加上
 "关于补全的脚本在 (apc.vim)vim-auto-popmenu 内容
 set completeopt=preview,menu,menuone,noselect,longest
 
-"给一个词语加上(),{},[],"",''，<>  缺点是使用的时候需要在normal mode，且把光标放在单词词首（b是移动光标到单词词首）
-nnoremap ( bi(<Esc>ea)<Esc>
-nnoremap { bi{<Esc>ea}<Esc>
-nnoremap [ bi[<Esc>ea]<Esc>
-nnoremap " bi"<Esc>ea"<Esc>
-nnoremap ' bi'<Esc>ea'<Esc>
-"nnoremap < bi<<Esc>ea><Esc>
+"""""""""""""""""""""""""""""""""""""""""
+" color scheme
+"""""""""""""""""""""""""""""""""""""""""
+set background=dark
+"colo termschool
+"colo pink-moon
+colo yellow-moon
+"colo orange-moon
 
-"在insert mode自动打出成对的(),{},[],"",'',<>
-inoremap ( ()<Esc>i
-inoremap { {}<Esc>i
-inoremap [ []<Esc>i
-inoremap " ""<Esc>i
-"inoremap ' ''<Esc>i
-"inoremap < <><Esc>i
-
-"在insert mode自动打出只想打出单个的(,{,[,"
-inoremap <M-(> (
-inoremap <M-{> {
-inoremap <M-[> [
-inoremap <M-"> "
-
-
-
-
-
-
-
-" Move a line of text using ALT+[jk] or Command+[jk] on mac
-nmap <M-j> mz:m+<cr>`z
-nmap <M-k> mz:m-2<cr>`z
-vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
-vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
-if has("mac") || has("macunix")
-  nmap <D-j> <M-j>
-  nmap <D-k> <M-k>
-  vmap <D-j> <M-j>
-  vmap <D-k> <M-k>
+if(!has("gui_running"))
+    set background=light
+    colo seoul256-light
 endif
 
-"将光标所在行上移或下移（另一个版本），配合数字使用是2]e将当前行下移两行（]e可以，我自定义的[k、]j带数字不行）
-"nnoremap [k :<c-u>execute 'move -1-'. v:count1<cr>
-"nnoremap ]j :<c-u>execute 'move +'. v:count1<cr>
-
-"在当前窗口对所在行高亮，但在插入模式关闭这个效果，然而我在neovim试了没用
-"autocmd IesertLeave,WinEnter * set cursorline
-"autocmd InsertEnter,WinLeave * set nocursorline
-"这是高亮当前行另一种写法
-"autocmd InsertLeave * se nocul
-"autocmd InsertEnter * se cul
-
-
-"状态行显示的内容
-"set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ %{strftime(\"%d/%m%y\ -\ %H:%M\")}
-
-
-
-"允许折叠
-set foldenable
-"手动折叠
-set foldmethod=manual
-
-"显示中文帮助
-if version >= 603
-    set helplang=cn
-    set langmenu=zh_CN.UTF-8
-    set encoding=utf-8
+if(match(hostname(), 'ionode..') >= 0)
+    set guifont=Monospace\ 18
+else
+    set guifont=DejaVu\ Sans\ Mono\ 18
 endif
 
-" 使回格键（backspace）正常处理indent, eol, start等
-set backspace=2
-" 允许backspace和光标键跨越行边界
-set whichwrap+=<,>,h,l
-
-" 通过使用: commands命令，告诉我们文件的哪一行被改变过
-"set report=0
-
-" 可以在buffer的任何地方使用鼠标（类似office中在工作区双击鼠标定位）
-"set mouse=a
-"set selection=exclusive
-"set selectmode=mouse,key
-
-" For regular expressions turn magic on
-set magic
-
-" Smart way to move between windows
-"map <C-j> <C-W>j
-"map <C-k> <C-W>k
-"map <C-h> <C-W>h
-"map <C-l> <C-W>l
-map <C-Down> <C-W>j
-map <C-Up> <C-W>k
-map <C-Left> <C-W>h
-map <C-Right> <C-W>l
-
-" Useful mappings for managing tabs
-"map <leader>tn :tabnew<cr>
-"map <leader>to :tabonly<cr>
-"map <leader>tc :tabclose<cr>
-"map <leader>tm :tabmove 
-"map <leader>t<leader> :tabnext 
-
-"在本行与上行/下行之间，在insert mode插入一个空行，且具有相应行缩进
-inoremap <c-o> <Esc>k$o
-
-"在insert mode自定义begin end
-"inoremap <c-b> begin<cr>end<Esc>k$o
-
-"在insert mode下自定义一个always模块
-"inoremap <c-a> always @(posedge clk or negedge rst_n) begin<cr>end<Esc>k$oif (!rst_n) begin<cr>end<cr>else begin<cr>end<Esc>3k$o
-
+" old color scheme
+"set gfn=FiraCode\ NF:h15
+"set gfn=Courier\ 10\ Pitch\ 14
+"colorschem desert
 
 
 """""""""""""""""""""""""""""""""""""""""
@@ -478,40 +399,92 @@ endfunc
 """""""""""""""""""""""""""""""""""""""""
 """""""""键盘命令"""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""
-" 映射全选+复制 ctrl+a
-nnoremap <C-a> ggVGY
+" 映射全选+复制 ctrl+a -> 舍弃，保留vim原有功能，数字加1（ctrl+x，数字减1）
+"nnoremap <C-a> ggVGY
 "去空行
 "vnoremap <F2> :g/^\s*$/d<cr>
 "比较文件  
 "nnoremap <C-F2> :vert diffsplit 
-"C，C++ 按F5编译运行
-map <F5> :call CompileRunGcc()<CR>
-func! CompileRunGcc()
-    exec "w"
-    if &filetype == 'c'
-        exec "!g++ % -o %<"
-        exec "! ./%<"
-    elseif &filetype == 'cpp'
-        exec "!g++ % -o %<"
-        exec "! ./%<"
-    elseif &filetype == 'java' 
-        exec "!javac %" 
-        exec "!java %<"
-    elseif &filetype == 'sh'
-        :!./%
-    elseif &filetype == 'py'
-        exec "!python %"
-        exec "!python %<"
-    endif
-endfunc
-"C,C++的调试
-map <F8> :call Rungdb()<CR>
-func! Rungdb()
-    exec "w"
-    exec "!g++ % -g -o %<"
-    exec "!gdb ./%<"
-endfunc
 
+"""""""""""""""""""""""""""""""""""""""""
+" 个人设置
+"""""""""""""""""""""""""""""""""""""""""
+"在visual mode下选择内容能按  p  将选择的内容替换为缓冲区的内容
+vnoremap p <Esc>:let current_reg = @"<CR>gvs<C-R>=current_reg<CR><Esc>
+
+" 展示完搜索结果后，取消搜索结果高亮
+map <silent> <leader><cr> :noh<cr>
+
+"给一个词语加上(),{},[],"",''，<>  缺点是使用的时候需要在normal mode，且把光标放在单词词首（b是移动光标到单词词首）
+nnoremap ( bi(<Esc>ea)<Esc>
+nnoremap { bi{<Esc>ea}<Esc>
+nnoremap [ bi[<Esc>ea]<Esc>
+nnoremap " bi"<Esc>ea"<Esc>
+nnoremap ' bi'<Esc>ea'<Esc>
+"nnoremap < bi<<Esc>ea><Esc>
+
+"在insert mode自动打出成对的(),{},[],"",'',<>
+inoremap ( ()<Esc>i
+inoremap { {}<Esc>i
+inoremap [ []<Esc>i
+inoremap " ""<Esc>i
+"inoremap ' ''<Esc>i
+"inoremap < <><Esc>i
+
+"在insert mode自动打出只想打出单个的(,{,[,"
+inoremap <M-(> (
+inoremap <M-{> {
+inoremap <M-[> [
+inoremap <M-"> "
+
+" 使用ALT+[jk]在normal mode移动鼠标所在行， or Command+[jk] on mac
+nmap <M-j> mz:m+<cr>`z
+nmap <M-k> mz:m-2<cr>`z
+vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
+vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
+if has("mac") || has("macunix")
+  nmap <D-j> <M-j>
+  nmap <D-k> <M-k>
+  vmap <D-j> <M-j>
+  vmap <D-k> <M-k>
+endif
+
+"将光标所在行上移或下移（另一个版本），配合数字使用是2]e将当前行下移两行（]e可以，我自定义的[k、]j带数字不行）
+"nnoremap [k :<c-u>execute 'move -1-'. v:count1<cr>
+"nnoremap ]j :<c-u>execute 'move +'. v:count1<cr>
+
+"在当前窗口对所在行高亮，但在插入模式关闭这个效果，然而我在neovim试了没用
+"autocmd IesertLeave,WinEnter * set cursorline
+"autocmd InsertEnter,WinLeave * set nocursorline
+"这是高亮当前行另一种写法
+"autocmd InsertLeave * se nocul
+"autocmd InsertEnter * se cul
+
+" Smart way to move between windows
+"map <C-j> <C-W>j
+"map <C-k> <C-W>k
+"map <C-h> <C-W>h
+"map <C-l> <C-W>l
+map <C-Down> <C-W>j
+map <C-Up> <C-W>k
+map <C-Left> <C-W>h
+map <C-Right> <C-W>l
+
+" Useful mappings for managing tabs
+"map <leader>tn :tabnew<cr>
+"map <leader>to :tabonly<cr>
+"map <leader>tc :tabclose<cr>
+"map <leader>tm :tabmove 
+"map <leader>t<leader> :tabnext 
+
+"在本行与上行/下行之间，在insert mode插入一个空行，且具有相应行缩进
+inoremap <c-o> <Esc>k$o
+
+"在insert mode自定义begin end
+"inoremap <c-b> begin<cr>end<Esc>k$o
+
+"在insert mode下自定义一个always模块
+"inoremap <c-a> always @(posedge clk or negedge rst_n) begin<cr>end<Esc>k$oif (!rst_n) begin<cr>end<cr>else begin<cr>end<Esc>3k$o
 
 "打开文件时恢复光标位置(网上找的)
 "autocmd BufReadPost *
@@ -561,12 +534,7 @@ let b:matchit_ignorecase=1  "hue nue da xiao xie
 "启用下侧滚动条
 set go+=b
 
-"设置命令模式下命令的自动补全行为，1：bash shell行为，2：zsh行为
-"1
-set wildmode=longest,list
-"2
-"set wildmenu
-"set wildmode=full
+
 
 "一个gvim中不同缓冲区之间的切换
 nnoremap <silent> <leader>n :bnest<CR>
@@ -597,4 +565,5 @@ normap <silent> <leader><leader># 0f#x
 xnormap <silent> <leader># :\#<CR>
 xnormap <silent> <leader><leader># :\\#<CR>
 
-map <F1> :keepjumps normal! *N<CR>
+" shift+鼠标左击，会将搜索的单词跳往下一个匹配字符，按F2不会跳往，继续停留在当前字符（确定，所选字符会变成现实的中间行）
+map <F2> :keepjumps normal! *N<CR>
