@@ -61,14 +61,204 @@ highlight StatusLineNC guifg=Gray guibg=White
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 " nerdtree就是需要管理的插件，其它插件类似，nerdtree也需要安装？
+" https://github.com/preservim/nerdtree
 Plugin 'nerdtree'
 call vundle#end
 
+map <F1> :NERDTreeToggle<CR>
 
-set nowrap
-set nowrapscan
-set cmdheight=1
+"""""""""""""""""""""""""""""""""""""""""
+" 文件设置
+"""""""""""""""""""""""""""""""""""""""""
+" 不要备份文件（根据自己需要而设置）
+set nobackup
+"在修改文件的时候，会生成一个老版本的备份，文件以.~结尾
+"if has("vms")
+"    set nobackup
+"else
+"    set backup
+"endif
+
+" 显示行号
+set number
+
+" 搜索模式包含大写字母，则搜索将区分大小写。如果搜索模式全部为小写字母，则搜索将不区分大小写
+set smartcase
+
+" 突出显示当前行
+set cursorline
+
+" Tab键的宽度
+set tabstop=4
+" 统一缩进为4
+set softtabstop=4
+set shiftwidth=4
+" 在插入模式下，会把按 Tab 键所插入的 tab 字符替换为合适数目的空格。如果确实要插入 tab 字符，需要按 CTRL-V 键，再按 Tab 键
 set expandtab
+
+" 不要生成swap文件，当buffer被丢弃的是否隐藏它
+setlocal noswapfile
+set bufhidden=hide
+
+" 字符间插入的像素行数目
+set linespace=0
+
+" 在状态行显示光标所在位置的行号和列号
+set ruler
+set rulerformat=%20(%2*%<%f%=\ %m%r\ %31\ %c\ %p%%%)
+
+" 命令行（在状态行下）的高度，默认为1，这里设置为2
+set cmdheight=2
+
+" 使回格键（backspase）正常处理indent，eol，start等
+set backspace=2
+
+" 允许baskspace和光标键跨越行边界
+set whichwrap+=<,>,h,l
+
+" 可以在buffer的任何地方使用鼠标（类似office中在工作区双击鼠标定位）
+" set mouse=a
+" set selection=exclusive
+" set selectmode=mouse,key
+
+" 在启动的时候不显示援助索马里儿童的提示
+set shortmess=atI
+
+" 通过使用：commands命令，告诉我们文件的哪一行被改变过
+set report=0
+
+" 在被分割的窗口显示空白，便于阅读
+set fillchars=vert:\ ,stl:\ ,stlnc:\ 
+
+"""""""""""""""""""""""""""""""""""""""""
+" 搜索和匹配
+"""""""""""""""""""""""""""""""""""""""""
+" 高亮显示匹配的括号
+set showmatch
+
+" 匹配括号高亮的时间（单位是十分之一秒）
+set matchtime=5
+
+" 搜索忽略大小写
+"set ignorecase
+
+" 搜索时匹配字符高亮
+set hlsearch
+
+" 在搜索时，输入的词句逐字3高亮（类似firefox的搜索）
+" set incsearch
+
+" 输入:set list命令是应该显示些啥？
+set listchars=tab:\|\ ,trail:.,extends:>,precedes:<,eol:$ 
+
+"翻页的时候顶部或底部保留5行内容
+set scrolloff=5
+
+" 我的装填行显示的内容（包括文件类型和解码）
+set statusline=%F%m%r%h%w\[POS=%l,%v][%p%%]\%{strftime(\"%d%m%y\ -\ %H:%M\")}
+
+" 启动显示状态行（1），总是显示状态行（2）
+set laststatus=2
+
+"""""""""""""""""""""""""""""""""""""""""
+" 文本格式和排版
+"""""""""""""""""""""""""""""""""""""""""
+" 自动格式化
+set formatoptions=tcrqn
+
+" 继承前一行的缩进方式，特别适用于多行注释
+set autoindent
+
+" 为C程序提供自动缩进
+set smartindent
+
+" 使用C样式的缩进
+set cindent
+
+" 不要换行显示
+set nowrap
+
+" 在行和段开始处使用制表符
+set smarttab
+
+"""""""""""""""""""""""""""""""""""""""""
+" CTags的设定
+"""""""""""""""""""""""""""""""""""""""""
+" 按照名称排序
+let Tlist_Sort_Type = "name"
+
+" 在右侧显示窗口
+let Tlist_Use_Right_Window = 1
+
+" 压缩方式
+let Tlist_Compart_Format = 1
+
+" 如果只有一个buffer，kill窗口也kill掉buffer
+let Tlist_Exist_OnlyWindow = 1
+
+" 不要关闭其它文件的tags
+let Tlist_File_Fold_Auto_Close = 0
+
+" 不要显示折叠树
+let Tlist_Enable_Fold_Column = 0
+
+"""""""""""""""""""""""""""""""""""""""""
+" Autocommands
+"""""""""""""""""""""""""""""""""""""""""
+" 只在下列文件类型被侦测到的时候显示行号，普通文本文件不显示
+if has("autocmd")
+autocmd FileType xml,html,c,cs,java,perl,shell,bash,cpp,python,vim,php,ruby set number
+autocmd FileType xml,html xsl source $VIMRUNTIME/plugin/closetag.vim
+autocmd BufReadPost *
+\ if line("'\"") > 0 && line("'\"") <= line("$") |
+\ exe " normal g`\"" |
+\ endif
+endif "has("autocmd")
+
+" F5编译和运行C程序，F6编译和运行C++程序
+" 请注意，下述代码在windows下使用会报错
+" 需要去掉./两个字符
+
+" C的编译和运行
+map <F5> :call CompileRunGcc()<CR>
+func! CompileRunGcc()
+exec "w"
+exec "!gcc % -o %<"
+exec "! ./%<"
+endfunc
+
+" C++的编译和运行
+map <F6> :call CompileRunGpp()<CR>
+func! CompileRunGpp()
+exec "w"
+exec "!g++ % -o %<"
+exec "! ./%<"
+endfunc
+
+map fff :call SetLeftWindow()<CR>
+func! SetLeftWindow()
+    winpos 10 0
+    set lines=40 columns=170
+endfunc
+
+map ffg :call SetRightWindow()<CR>
+func! SetRightWindow()
+    winpos 2565 0
+    set lines=40 columns=170
+endfunc
+
+" 能够漂亮地显示.NFO文件
+set encoding=utf-8
+set fileencodings=ucs-bom,utf-8,gbk,cp936,gb2312,big5,euc-jp,euc-kr,latin1
+
+
+
+
+
+
+set nowrapscan
+
+
 "set gfn=FiraCode\ NF:h15
 set gfn=Courier\ 10\ Pitch\ 14
 set tags+=.../tags
@@ -81,23 +271,15 @@ colorschem desert
 """""""""""""""""""""""""""""""""""""""""
 """""""""使用设置"""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""
-" 在被分割的窗口间显示空白，便于阅读
-"set fillchars=vert:\ ,stl:\ ,stlnc:\
 
-" 高亮显示匹配的括号
-set showmatch
 
-"搜索忽略大小写
-"set ignorecase
 
-" 显示行号
-set number
 
-" Tab键的宽度
-set tabstop=4
-" 统一缩进为4
-set softtabstop=4
-set shiftwidth=4
+
+
+
+
+
 
 " 设置当文件被改动时自动载入
 set autoread
@@ -108,24 +290,15 @@ set clipboard+=unnamed
 
 
 "
-set backspace=indent,eol,start
-"换行时与上一行有相同的缩进方式
-set autoindent
-set cindent
-" 为C程序提供自动缩进
-set smartindent
-
-"在修改文件的时候，会生成一个老版本的备份，文件以.~结尾
-"if has("vms")
-"    set nobackup
-"else
-"    set backup
-"endif
 
 
 
-"在右下角显示光标所在的行列信息
-set ruler
+
+
+
+
+
+
 
 "在右下角显示normal mode下的正在输入的命令
 set showcmd
@@ -135,8 +308,7 @@ vnoremap p <Esc>:let current_reg = @"<CR>gvs<C-R>=current_reg<CR><Esc>
 
 
 
-"搜索时匹配字符高亮
-set hlsearch
+
 "after show search match, turn off this match highlight
 map <silent> <leader><cr> :noh<cr>
 
@@ -170,8 +342,7 @@ inoremap <M-"> "
 
 
 
-"翻页的时候顶部或底部保留5行内容
-set scrolloff=5
+
 
 
 
@@ -197,14 +368,12 @@ endif
 "这是高亮当前行另一种写法
 "autocmd InsertLeave * se nocul
 "autocmd InsertEnter * se cul
-" 突出显示当前行
-set cursorline 
+
 
 "状态行显示的内容
 "set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ %{strftime(\"%d/%m%y\ -\ %H:%M\")}
 
-"启动显示状态行（1），总是显示状态行（2）
-set laststatus=1
+
 
 "允许折叠
 set foldenable
