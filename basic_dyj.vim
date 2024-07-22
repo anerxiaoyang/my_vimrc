@@ -33,7 +33,7 @@ filetype plugin on
 filetype indent on
 
 " 保存全局变量
-set viminfo+=!
+set viminfo+=! 
 set lines=50 columns=120
 
 " 将数字0-9、可打印希腊文（还是阿拉丁文？）、下划线、连接符视为单词字符
