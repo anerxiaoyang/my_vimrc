@@ -2,22 +2,71 @@
 " Maintainer:    lamb_deng
 " Website:
 " Created Time:  2021-07-18 16:08:05
+" Version:
+"          2021-07-18: init version
+"          2024--7-22: add vim rules from jason
 " Last Modified:
 " File:          basic_dyj.vim
 " License:       MIT
 
+"""""""""""""""""""""""""""""""""""""""""
+" 一般设置
+"""""""""""""""""""""""""""""""""""""""""
+" 设置默认解码
+set fenc=utf-8
+set fencs=utf-8,usc-bom,euc-jp,gb18030,gbk,gb2312,cp936
+
+" 关闭兼容模式，用于避免老版本的bug和局限
+set nocompatible
+
+" 历史记录数
+set history=1000
+
+" 在处理未保存或只读文件的时候，弹出确认
+set confirm
+
+" 侦测文件类型
+filetype on
+" 载入文件类型插件
+filetype plugin on
+" 为特定文件类型载入相关缩进文件
+filetype indent on
+
+" 保存全局变量
+set viminfo+=!
+set lines=50 columns=120
+
+" 将数字0-9、可打印希腊文（还是阿拉丁文？）、下划线、连接符视为单词字符
+"set iskeyword=48-57,192-255,_,-,$,@,%,#
+set iskeyword=48-57,192-255,_,-,@,%,#
+
+" 语法高亮
+syntax on
+
+" 高亮字符，让其不受100列限制
+:highlight OverLength ctermbg=red ctermfg=white guibg=red guifg=white
+:match OverLength '\%101v.*'
+
+" 状态行颜色
+highlight StatusLine guifg=SlateBlue guibg=Yellow
+highlight StatusLineNC guifg=Gray guibg=White
+
+"""""""""""""""""""""""""""""""""""""""""
+" plugin
+"""""""""""""""""""""""""""""""""""""""""
+" 使用Vunble管理vim插件, Vunble需要安装
+" https://zhuanlan.zhihu.com/p/34478059/
+" https://blog.csdn.net/lyshark_lyshark/article/details/125846990
+" https://blog.csdn.net/qq_42570601/article/details/120368712
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" nerdtree就是需要管理的插件，其它插件类似，nerdtree也需要安装？
+Plugin 'nerdtree'
+call vundle#end
 
 
-
-"config from yuanyapeng
-set number
-set ruler
-set showmatch
-set autoindent
 set nowrap
 set nowrapscan
-set tabstop=4
-set shiftwidth=4
 set cmdheight=1
 set expandtab
 "set gfn=FiraCode\ NF:h15
@@ -27,8 +76,7 @@ set autochdir
 colorschem desert
 
 
-"my config
-"
+
 
 """""""""""""""""""""""""""""""""""""""""
 """""""""使用设置"""""""""""""""""""""""""
@@ -57,8 +105,7 @@ set autoread
 "共享剪贴板  
 set clipboard+=unnamed
 
-"关闭兼容模式，用于避免老版本的bug和局限
-set nocompatible
+
 
 "
 set backspace=indent,eol,start
@@ -75,8 +122,7 @@ set smartindent
 "    set backup
 "endif
 
-"历史记录数
-set history=1000
+
 
 "在右下角显示光标所在的行列信息
 set ruler
@@ -87,20 +133,14 @@ set showcmd
 "在visual mode下选择内容能按  p  将选择的内容替换为缓冲区的内容
 vnoremap p <Esc>:let current_reg = @"<CR>gvs<C-R>=current_reg<CR><Esc>
 
-"语法高亮
-syntax on
+
 
 "搜索时匹配字符高亮
 set hlsearch
 "after show search match, turn off this match highlight
 map <silent> <leader><cr> :noh<cr>
 
-"
-filetype plugin indent on
-" 载入文件类型插件
-filetype plugin on
-" 为特定文件类型载入相关缩进文件
-filetype indent on
+
 
 "补全选项，建议一定将noselect选项加上
 "关于补全的脚本在 (apc.vim)vim-auto-popmenu 内容
@@ -133,9 +173,7 @@ inoremap <M-"> "
 "翻页的时候顶部或底部保留5行内容
 set scrolloff=5
 
-"将数字0-9、可打印希腊文（还是阿拉丁文？）、下划线、连接符视为单词字符
-"set iskeyword=@,48-57,192-255,_,-,$,@,%,#
-set iskeyword=@,48-57,192-255,_,-,@,%,#
+
 
 " Move a line of text using ALT+[jk] or Command+[jk] on mac
 nmap <M-j> mz:m+<cr>`z
