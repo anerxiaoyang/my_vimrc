@@ -9,6 +9,8 @@
 " File:          basic_dyj.vim
 " License:       MIT
 
+" 安装verilog-mode： https://blog.csdn.net/weixin_41843386/article/details/135571504
+
 """""""""""""""""""""""""""""""""""""""""
 " 一般设置
 """""""""""""""""""""""""""""""""""""""""
@@ -567,3 +569,14 @@ xnormap <silent> <leader><leader># :\\#<CR>
 
 " shift+鼠标左击，会将搜索的单词跳往下一个匹配字符，按F2不会跳往，继续停留在当前字符（确定，所选字符会变成现实的中间行）
 map <F2> :keepjumps normal! *N<CR>
+
+" verilog-mode启动auto和killauto的设置
+map aa :call EmacsBatchAuto()<CR>
+map da :call EmacsBatchDeleteAuto()<CR>
+function EmacsBatchAuto()
+	!emacs --batch % -f verilog-batch-auto -q -script ~/.emacs
+endfunction
+function EmacsBatchDeleteAuto()
+	!emacs --batch % -f verilog-batch-delete-auto -q -script ~/.emacs
+endfunction
+
