@@ -10,6 +10,8 @@
 " License:       MIT
 
 " 安装verilog-mode： https://blog.csdn.net/weixin_41843386/article/details/135571504
+" verilog-mode使用FAQ: https://github.com/veripool/verilog-mode/blob/master/FAQ.rst
+"                      https://www.veripool.org/verilog-mode/help/
 
 """""""""""""""""""""""""""""""""""""""""
 " 一般设置
@@ -571,8 +573,8 @@ xnormap <silent> <leader><leader># :\\#<CR>
 map <F2> :keepjumps normal! *N<CR>
 
 " verilog-mode启动auto和killauto的设置
-map aa :call EmacsBatchAuto()<CR>
-map da :call EmacsBatchDeleteAuto()<CR>
+map ta :call EmacsBatchAuto()<CR>
+map td :call EmacsBatchDeleteAuto()<CR>
 function EmacsBatchAuto()
 	!emacs --batch % -f verilog-batch-auto -q -script ~/.emacs
 endfunction
