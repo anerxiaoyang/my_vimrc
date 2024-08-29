@@ -574,9 +574,19 @@ map <F2> :keepjumps normal! *N<CR>
 
 " verilog-mode启动auto和killauto的设置
 map ta :call EmacsBatchAuto()<CR>
+map tf :call EmacsBatchAutoFormat()<CR>
 map td :call EmacsBatchDeleteAuto()<CR>
 function EmacsBatchAuto()
 	!emacs --batch % -f verilog-batch-auto -q -script ~/.emacs
+endfunction
+function EmacsBatchAutoFormat()
+	w abcxyz123789.v
+	call system('perl xxpath/verilog_mode_format.pl') TODO
+	%d
+	r abcxyz123789.v
+	1d
+	w
+	call system('rm abcxyz123789.v')
 endfunction
 function EmacsBatchDeleteAuto()
 	!emacs --batch % -f verilog-batch-delete-auto -q -script ~/.emacs
